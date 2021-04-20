@@ -1,0 +1,138 @@
+[
+    {
+        "id": "f6f2187d.f17ca8",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "4ba54b61.b9cc24",
+        "type": "kafkajs-client",
+        "name": "",
+        "brokers": "broker-3-cjwsr03vkdy4gd98.kafka.svc04.us-south.eventstreams.cloud.ibm.com:9093",
+        "clientid": "a_very unique_id",
+        "connectiontimeout": "3000",
+        "requesttimeout": "25000",
+        "advancedretry": false,
+        "maxretrytime": "30000",
+        "initialretrytime": "300",
+        "factor": "0.2",
+        "multiplier": "2",
+        "retries": "5",
+        "auth": "saslplain",
+        "tlsselfsign": false,
+        "tlscacert": "",
+        "tlsclientcert": "",
+        "tlsprivatekey": "",
+        "tlspassphrase": "",
+        "saslplainssl": true,
+        "loglevel": "error"
+    },
+    {
+        "id": "3cc11d24.ff01a2",
+        "type": "comment",
+        "z": "f6f2187d.f17ca8",
+        "name": "WARNING: please check you have started this container with a volume that is mounted to /data\\n otherwise any flow changes are lost when you redeploy or upgrade the container\\n (e.g. upgrade to a more recent node-red docker image).\\n  If you are using named volumes you can ignore this warning.\\n Double click or see info side panel to learn how to start Node-RED in Docker to save your work",
+        "info": "\nTo start docker with a bind mount volume (-v option), for example:\n\n```\ndocker run -it -p 1880:1880 -v /home/user/node_red_data:/data --name mynodered nodered/node-red\n```\n\nwhere `/home/user/node_red_data` is a directory on your host machine where you want to store your flows.\n\nIf you do not do this then you can experiment and redploy flows, but if you restart or upgrade the container the flows will be disconnected and lost. \n\nThey will still exist in a hidden data volume, which can be recovered using standard docker techniques, but that is much more complex than just starting with a named volume as described above.",
+        "x": 350,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "1384be07.3fdad2",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 530,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "729f579a.760a98",
+        "type": "kafkajs-producer",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "client": "4ba54b61.b9cc24",
+        "topic": "kafka-java-console-sample-topic",
+        "advancedoptions": true,
+        "acknowledge": "all",
+        "partition": "",
+        "headeritems": {},
+        "key": "",
+        "responsetimeout": 30000,
+        "transactiontimeout": 60000,
+        "metadatamaxage": 300000,
+        "allowautotopiccreation": false,
+        "x": 540,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "da95cb77.418f28",
+        "type": "inject",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "hello world",
+        "payloadType": "str",
+        "x": 270,
+        "y": 300,
+        "wires": [
+            [
+                "729f579a.760a98"
+            ]
+        ]
+    },
+    {
+        "id": "d4f9f890.c9fb18",
+        "type": "kafkajs-consumer",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "client": "4ba54b61.b9cc24",
+        "groupid": "",
+        "topic": "kafka-java-console-sample-topic",
+        "advancedoptions": false,
+        "autocommitinterval": 5000,
+        "autocommitthreshold": 100,
+        "sessiontimeout": 30000,
+        "rebalancetimeout": 60000,
+        "heartbeatinterval": 3000,
+        "metadatamaxage": 300000,
+        "maxbytesperpartition": 1048576,
+        "minbytes": 1,
+        "maxbytes": 10485760,
+        "maxwaittimeinms": 5000,
+        "frombeginning": false,
+        "clearoffsets": false,
+        "allowautotopiccreation": false,
+        "x": 270,
+        "y": 240,
+        "wires": [
+            [
+                "1384be07.3fdad2"
+            ]
+        ]
+    }
+]
